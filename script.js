@@ -670,7 +670,7 @@
                     updateAuthUI();
                     e.target.reset();
                 } catch (err) {
-                    console.error('Firebase login failed:', err);
+                    console.error(' login failed:', err);
                     showToast(getFriendlyAuthError(err) || 'Login failed', 'error');
                 }
             } else {
@@ -764,7 +764,7 @@
                     updateAuthUI();
                     e.target.reset();
                 } catch (err) {
-                    console.error('Firebase registration failed:', err);
+                    console.error('registration failed:', err);
                     showToast(getFriendlyAuthError(err) || 'Registration failed', 'error');
                 }
             } else {
@@ -808,7 +808,7 @@
                 try {
                     await FB_AUTH.signOut();
                 } catch (err) {
-                    console.error('Firebase sign out failed:', err);
+                    console.error(' sign out failed:', err);
                     showToast(getFriendlyAuthError(err) || 'Logout failed', 'error');
                     return;
                 }
