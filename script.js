@@ -1265,6 +1265,9 @@
 
             switch (code) {
                 case 'auth/user-not-found':
+                case 'auth/invalid-login-credentials':
+                case 'auth/invalid_login_credentials':
+                    // Treat invalid login credentials as an account-not-found error for clarity
                     return 'No account was found with that email address.';
                 case 'auth/wrong-password':
                     return 'Incorrect password. Please try again.';
