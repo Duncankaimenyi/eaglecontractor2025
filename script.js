@@ -671,7 +671,7 @@
                     e.target.reset();
                 } catch (err) {
                     console.error('Firebase login failed:', err);
-                    showToast(err.message || 'Login failed', 'error');
+                    showToast(getFriendlyAuthError(err) || 'Login failed', 'error');
                 }
             } else {
                 // In production, implement actual API call
@@ -765,7 +765,7 @@
                     e.target.reset();
                 } catch (err) {
                     console.error('Firebase registration failed:', err);
-                    showToast(err.message || 'Registration failed', 'error');
+                    showToast(getFriendlyAuthError(err) || 'Registration failed', 'error');
                 }
             } else {
                 // Default production message
@@ -795,7 +795,7 @@
                     e.target.reset();
                 } catch (err) {
                     console.error('Password reset failed:', err);
-                    showToast(err.message || 'Password reset failed', 'error');
+                    showToast(getFriendlyAuthError(err) || 'Password reset failed', 'error');
                 }
             } else {
                 showToast('Password reset requires backend integration', 'warning');
@@ -1232,6 +1232,38 @@
             setTimeout(() => {
                 toast.classList.remove('show');
             }, 5000);
+        }
+
+        /**
+         * Map Firebase Auth errors to user-friendly messages for display to end users.
+         * Returns a short, safe message suitable for UI display.
+         */
+        function getFriendlyAuthError(err) {
+            if (!err) return 'An unexpected error occurred. Please try again.';
+            const code = (err.code || '').toString();
+
+            switch (code) {
+                case 'auth/user-not-found':
+                    return 'No account was found with that email address.';
+                case 'auth/wrong-password':
+                    return 'Incorrect password. Please try again.';
+                case 'auth/invalid-email':
+                    return 'That email address appears to be invalid.';
+                case 'auth/email-already-in-use':
+                    return 'That email is already registered. Try logging in.';
+                case 'auth/weak-password':
+                    return 'Password is too weak. Please use at least 8 characters.';
+                case 'auth/too-many-requests':
+                    return 'Too many attempts. Please wait a while and try again.';
+                case 'auth/network-request-failed':
+                    return 'Network error. Check your connection and try again.';
+                default:
+                    // Prefer short, non-technical err.message when reasonable
+                    if (err.message && typeof err.message === 'string' && err.message.length < 120) {
+                        return err.message;
+                    }
+                    return 'An error occurred. Please try again.';
+            }
         }
 
         function handleScroll() {
