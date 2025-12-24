@@ -600,25 +600,22 @@
         }
 
         // ===== AUTH FUNCTIONS =====
-        function showAuthModal(tab = 'login') {
-            switchAuthTab(tab);
-            showModal('authModal');
+        function showLoginModal() {
+            // Close register if open and open login modal
+            closeModal('registerModal');
+            showModal('loginModal');
         }
 
-        function switchAuthTab(tabName) {
-            // Update tabs
-            document.querySelectorAll('.auth-tab').forEach(tab => {
-                tab.classList.toggle('active', tab.getAttribute('data-tab') === tabName);
-            });
-            
-            // Update content
-            document.querySelectorAll('.auth-content').forEach(content => {
-                content.classList.toggle('active', content.id === `${tabName}Content`);
-            });
-            
-            // Update modal title
-            document.getElementById('authModalTitle').textContent = 
-                tabName === 'login' ? 'Login' : 'Create Account';
+        function showRegisterModal() {
+            // Close login if open and open register modal
+            closeModal('loginModal');
+            showModal('registerModal');
+        }
+
+        // Backwards-compatible helper
+        function showAuthModal(tab = 'login') {
+            if (tab === 'register') return showRegisterModal();
+            return showLoginModal();
         }
 
         async function handleLogin(e) {
@@ -1234,7 +1231,8 @@
         }
 
         function showForgotPassword() {
-            closeModal('authModal');
+            closeModal('loginModal');
+            closeModal('registerModal');
             showModal('forgotPasswordModal');
         }
 
@@ -1244,7 +1242,7 @@
 
         function switchToLogin() {
             closeModal('forgotPasswordModal');
-            showAuthModal('login');
+            showLoginModal();
         }
 
         // ===== UI UTILITIES =====
@@ -1639,8 +1637,9 @@
 
         // ===== GLOBAL FUNCTIONS =====
         // Make functions available globally for onclick handlers
-        window.showAuthModal = showAuthModal;
-        window.switchAuthTab = switchAuthTab;
+        window.showLoginModal = showLoginModal;
+        window.showRegisterModal = showRegisterModal;
+        window.showAuthModal = showAuthModal; // alias (backwards compatible)
         window.showForgotPassword = showForgotPassword;
         window.switchToLogin = switchToLogin;
         window.showGalleryModal = showGalleryModal;

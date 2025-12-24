@@ -62,10 +62,10 @@
                     <a href="#contact" class="nav-link">Contact</a>
                     
                     <div class="auth-buttons">
-                        <button class="auth-btn login-btn" onclick="showAuthModal('login')">
+                        <button class="auth-btn login-btn" onclick="showLoginModal()">
                             <i class="fas fa-sign-in-alt"></i> Login
                         </button>
-                        <button class="auth-btn register-btn" onclick="showAuthModal('register')">
+                        <button class="auth-btn register-btn" onclick="showRegisterModal()">
                             <i class="fas fa-user-plus"></i> Register
                         </button>
                     </div>
@@ -539,26 +539,21 @@
 
     <!-- ===== MODALS ===== -->
 
-    <!-- Auth Modal -->
-    <div class="modal-overlay" id="authModal">
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
         <div class="modal">
             <div class="modal-header">
-                <h2 class="modal-title" id="authModalTitle">Login</h2>
-                <button class="modal-close" onclick="closeModal('authModal')">&times;</button>
+                <h2 class="modal-title">Login</h2>
+                <button class="modal-close" onclick="closeModal('loginModal')">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="auth-tabs">
-                    <button class="auth-tab active" data-tab="login">Login</button>
-                    <button class="auth-tab" data-tab="register">Register</button>
-                </div>
-                
-                <div id="loginContent" class="auth-content active">
+                <div id="loginContent">
                     <form id="loginForm">
                         <div class="form-group">
                             <label for="loginEmail" class="form-label">Email Address *</label>
                             <input type="email" id="loginEmail" class="form-control" placeholder="Enter your email" required>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="loginPassword" class="form-label">Password *</label>
                             <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password" required>
@@ -571,37 +566,48 @@
                                 </a>
                             </div>
                         </div>
-                        
+
                         <button type="submit" class="btn btn-primary btn-block">
                             <i class="fas fa-sign-in-alt"></i> Login
                         </button>
-                        
+
                         <div class="text-center mt-3">
-                            <p style="font-size: 0.9rem; color: var(--gray);">
+                            <p style="font-size: 0.9rem; color:black;">
                                 Don't have an account? 
-                                <a href="#" onclick="switchAuthTab('register')" style="font-weight: 600;">Register here</a>
+                                <a href="#" onclick="closeModal('loginModal'); showRegisterModal();" style="font-weight: 600; color:var(--primary); padding: 10px;">Register here</a>
                             </p>
                         </div>
                     </form>
                 </div>
-                
-                <div id="registerContent" class="auth-content">
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal-overlay" id="registerModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Create Account</h2>
+                <button class="modal-close" onclick="closeModal('registerModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="registerContent">
                     <form id="registerForm">
                         <div class="form-group">
                             <label for="registerName" class="form-label">Full Name *</label>
                             <input type="text" id="registerName" class="form-control" placeholder="Enter your full name" required>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="registerEmail" class="form-label">Email Address *</label>
                             <input type="email" id="registerEmail" class="form-control" placeholder="Enter your email" required>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="registerPhone" class="form-label">Phone Number *</label>
                             <input type="tel" id="registerPhone" class="form-control" placeholder="Enter your phone number" required>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="registerPassword" class="form-label">Password *</label>
                             <input type="password" id="registerPassword" class="form-control" placeholder="Create a password" required>
@@ -609,12 +615,12 @@
                                 Must be at least 8 characters
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="registerConfirmPassword" class="form-label">Confirm Password *</label>
                             <input type="password" id="registerConfirmPassword" class="form-control" placeholder="Confirm your password" required>
                         </div>
-                        
+
                         <div class="form-group">
                             <label style="font-size: 0.9rem;">
                                 <input type="checkbox" id="acceptTerms" required>
@@ -622,15 +628,15 @@
                                 <a href="#privacy" onclick="showLegalPage('privacy')">Privacy Policy</a>
                             </label>
                         </div>
-                        
+
                         <button type="submit" class="btn btn-primary btn-block">
                             <i class="fas fa-user-plus"></i> Create Account
                         </button>
-                        
+
                         <div class="text-center mt-3">
-                            <p style="font-size: 0.9rem; color: var(--gray);">
+                            <p style="font-size: 0.9rem; color:black;">
                                 Already have an account? 
-                                <a href="#" onclick="switchAuthTab('login')" style="font-weight: 600;">Login here</a>
+                                <a href="#" onclick="closeModal('registerModal'); showLoginModal();" style="font-weight: 600; color:var(--primary);">Login here</a>
                             </p>
                         </div>
                     </form>
@@ -765,8 +771,8 @@
                     <div>
                         <h3 class="mb-3">Account</h3>
                         <ul>
-                            <li><a href="#" onclick="showAuthModal('login')">Login</a></li>
-                            <li><a href="#" onclick="showAuthModal('register')">Register</a></li>
+                            <li><a href="#" onclick="showLoginModal()">Login</a></li>
+                            <li><a href="#" onclick="showRegisterModal()">Register</a></li>
                             <li><a href="#" onclick="showForgotPassword()">Forgot Password</a></li>
                         </ul>
                     </div>
