@@ -418,6 +418,9 @@
             
             // Check for user session
             checkUserSession();
+
+            // Initialize network status monitoring (offline/online banner and form disabling)
+            initNetworkStatus();
         }
 
         // ===== RENDER FUNCTIONS =====
@@ -620,6 +623,11 @@
 
         async function handleLogin(e) {
             e.preventDefault();
+
+            if (!navigator.onLine) {
+                showToast('You are offline. Please reconnect to continue.', 'error');
+                return;
+            }
             
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
@@ -681,6 +689,11 @@
 
         async function handleRegister(e) {
             e.preventDefault();
+
+            if (!navigator.onLine) {
+                showToast('You are offline. Please reconnect to create an account.', 'error');
+                return;
+            }
             
             const name = document.getElementById('registerName').value;
             const email = document.getElementById('registerEmail').value;
@@ -775,6 +788,11 @@
 
         async function handleForgotPassword(e) {
             e.preventDefault();
+
+            if (!navigator.onLine) {
+                showToast('You are offline. Please reconnect to reset your password.', 'error');
+                return;
+            }
             
             const email = document.getElementById('resetEmail').value;
             
@@ -835,26 +853,74 @@
                             </div>
                             <span style="font-weight: 600; color: var(--primary);">Hi, ${APP.currentUser.name.split(' ')[0]}</span>
                         </div>
-                        <button class="auth-btn login-btn" onclick="logout()">
+                        <button class="auth-btn login-btn" id="logoutBtn" onclick="logout()">
                             <i class="fas fa-sign-out-alt"></i> Logout
                         </button>
                     </div>
                 `;
             } else {
                 authButtons.innerHTML = `
-                    <button class="auth-btn login-btn" onclick="showAuthModal('login')">
+                    <button class="auth-btn login-btn" id="loginBtn" onclick="showAuthModal('login')">
                         <i class="fas fa-sign-in-alt"></i> Login
                     </button>
-                    <button class="auth-btn register-btn" onclick="showAuthModal('register')">
+                    <button class="auth-btn register-btn" id="registerBtn" onclick="showAuthModal('register')">
                         <i class="fas fa-user-plus"></i> Register
                     </button>
                 `;
             }
         }
 
+        // ===== NETWORK STATUS (OFFLINE / ONLINE) =====
+        function initNetworkStatus() {
+            const banner = document.getElementById('offlineBanner');
+            const retryBtn = document.getElementById('retryNetwork');
+
+            function setNetworkDependentState(enabled) {
+                // Disable/enable form submit buttons and auth buttons that rely on network
+                const submitButtons = document.querySelectorAll('form button[type="submit"], #logoutBtn, #loginBtn, #registerBtn');
+                submitButtons.forEach(btn => {
+                    try { btn.disabled = !enabled; } catch (e) {}
+                });
+            }
+
+            function updateStatus() {
+                if (navigator.onLine) {
+                    banner?.classList.remove('visible');
+                    document.body.style.paddingTop = '';
+                    setNetworkDependentState(true);
+                    showToast('You are back online', 'success');
+                } else {
+                    banner?.classList.add('visible');
+                    // push page content down so banner doesn't cover header
+                    try { document.body.style.paddingTop = (banner ? banner.offsetHeight : 48) + 'px'; } catch (e) {}
+                    setNetworkDependentState(false);
+                    showToast('You are offline. Some features are unavailable.', 'error');
+                }
+            }
+
+            window.addEventListener('online', updateStatus);
+            window.addEventListener('offline', updateStatus);
+
+            retryBtn?.addEventListener('click', function () {
+                if (navigator.onLine) {
+                    updateStatus();
+                } else {
+                    showToast('Still offline. Check your connection and try again.', 'error');
+                }
+            });
+
+            // Initial check
+            updateStatus();
+        }
+
         // ===== FORM HANDLING =====
         async function handleContactSubmit(e) {
             e.preventDefault();
+
+            if (!navigator.onLine) {
+                showToast('You are offline. Please reconnect to send messages.', 'error');
+                return;
+            }
             
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
@@ -921,6 +987,11 @@
 
         async function handleNewsletterSubmit(e) {
             e.preventDefault();
+
+            if (!navigator.onLine) {
+                showToast('You are offline. Please reconnect to subscribe.', 'error');
+                return;
+            }
             
             const email = e.target.querySelector('input[type="email"]').value;
             const honeypot = e.target.querySelector('input[name="newsletter_honeypot"]')?.value;
