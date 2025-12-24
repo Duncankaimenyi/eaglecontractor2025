@@ -111,7 +111,7 @@
                     title: 'Meru Southern Bypass',
                     category: 'infrastructure',
                     image: 'eaglecontractorsimages/road6.jpeg',
-                    description: '10km dual carriageway road project improving traffic flow in Nairobi.',
+                    description: '10km dual carriageway road project improving traffic flow in meru.',
                     year: '2024',
                     status: 'completed',
                     area: '10 km',
@@ -133,7 +133,7 @@
                     title: 'Kilimani Apartments',
                     category: 'residential',
                     image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-                    description: 'Modern apartment complex with 120 units and premium amenities.',
+                    description: 'Modern apartment complex with three room and premium amenities.',
                     year: '2023',
                     status: 'completed',
                     area: '25,000 sq ft',
@@ -325,6 +325,8 @@
                         const targetId = this.getAttribute('href').substring(1);
                         scrollToSection(targetId);
                         closeMobileMenu();
+                        // Send page_view to Google Analytics for in-page navigation (single-page behavior)
+                        sendPageViewToGA('#' + targetId);
                     }
                 });
             });
@@ -390,6 +392,10 @@
             // Window events
             window.addEventListener('scroll', handleScroll);
             window.addEventListener('resize', handleResize);
+            // Send page_view on hash changes (user navigating using anchors or back/forward)
+            window.addEventListener('hashchange', function() {
+                sendPageViewToGA();
+            });
 
             // Keyboard shortcuts
             document.addEventListener('keydown', function(e) {
@@ -403,6 +409,22 @@
                 if (e.key === 'ArrowLeft') prevTestimonial();
                 if (e.key === 'ArrowRight') nextTestimonial();
             });
+        }
+
+        // Send a page_view event to Google Analytics (supports optional hash like '#services')
+        function sendPageViewToGA(optionalHash) {
+            try {
+                if (typeof gtag !== 'function') return;
+                const hashPart = optionalHash && optionalHash.startsWith('#') ? optionalHash : (window.location.hash || '');
+                const page_location = window.location.origin + window.location.pathname + window.location.search + (hashPart || '');
+                const page_path = window.location.pathname + window.location.search + (hashPart || window.location.hash);
+                gtag('event', 'page_view', {
+                    page_location: page_location,
+                    page_path: page_path
+                });
+            } catch (err) {
+                // Quietly ignore if GA not available
+            }
         }
 
         // ===== UI INITIALIZATION =====
