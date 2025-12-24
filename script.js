@@ -802,7 +802,19 @@
             }
         }
 
-        function logout() {
+        async function logout() {
+            // If Firebase is enabled and available, sign out there first
+            if (CONFIG.FIREBASE && CONFIG.FIREBASE.ENABLED && window.FB_AUTH) {
+                try {
+                    await FB_AUTH.signOut();
+                } catch (err) {
+                    console.error('Firebase sign out failed:', err);
+                    showToast(getFriendlyAuthError(err) || 'Logout failed', 'error');
+                    return;
+                }
+            }
+
+            // Clear local session
             APP.currentUser = null;
             APP.isLoggedIn = false;
             localStorage.removeItem('eagle_user');
@@ -827,6 +839,15 @@
                             <i class="fas fa-sign-out-alt"></i> Logout
                         </button>
                     </div>
+                `;
+            } else {
+                authButtons.innerHTML = `
+                    <button class="auth-btn login-btn" onclick="showAuthModal('login')">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                    <button class="auth-btn register-btn" onclick="showAuthModal('register')">
+                        <i class="fas fa-user-plus"></i> Register
+                    </button>
                 `;
             }
         }
