@@ -111,7 +111,11 @@
                     title: 'Meru Southern Bypass',
                     category: 'infrastructure',
                     image: 'eaglecontractorsimages/road6.jpeg',
+<<<<<<< HEAD
                     description: '10km dual carriageway road project improving traffic flow in meru.',
+=======
+                    description: '10km dual carriageway road project improving traffic flow in MERU.',
+>>>>>>> 0f7ac6dcf1592ffe62ba8c7cc650030c18b81c7b
                     year: '2024',
                     status: 'completed',
                     area: '10 km',
@@ -133,7 +137,11 @@
                     title: 'Kilimani Apartments',
                     category: 'residential',
                     image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+<<<<<<< HEAD
                     description: 'Modern apartment complex with three room and premium amenities.',
+=======
+                    description: 'Modern apartment complex with THREE rooms and premium amenities.',
+>>>>>>> 0f7ac6dcf1592ffe62ba8c7cc650030c18b81c7b
                     year: '2023',
                     status: 'completed',
                     area: '25,000 sq ft',
